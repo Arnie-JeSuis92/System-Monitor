@@ -6,15 +6,14 @@ public class SystemMonitor {
 
     public static void main(String[] args) throws Exception {
 
-        OperatingSystemMXBean osBean
-                = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
         while (true) {
 
-            double cpuLoad = osBean.getCpuLoad() * 100;
+            double cpuLoad = osBean.getProcessCpuLoad() * 100;
 
-            long totalMemory = osBean.getTotalMemorySize();
-            long freeMemory = osBean.getFreeMemorySize();
+            long totalMemory = osBean.getCommittedVirtualMemorySize();
+            long freeMemory = osBean.getFreePhysicalMemorySize();
             long usedMemory = totalMemory - freeMemory;
 
             System.out.println("CPU Usage: " + String.format("%.2f", cpuLoad) + "%");
@@ -23,8 +22,9 @@ public class SystemMonitor {
             System.out.println("--------------------------");
 
             Thread.sleep(1000);
-            if (Thread.interrupted())  // Clears interrupted status!
-            throw new InterruptedException();
+
+            if (Thread.interrupted()) // Clears interrupted status!
+                throw new InterruptedException();
 
         }
     }
